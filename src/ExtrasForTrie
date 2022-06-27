@@ -1,0 +1,53 @@
+    public int tUsedInWord(String s, int count) {
+        if (s.length() == 0) {
+            return count;
+        }
+        if (this.children[s.charAt(0) - 'a'] != null) {
+            //System.out.println("node " + s.charAt(0) + " is used: " + this.children[s.charAt(0) - 'a'].timesUsed);
+            count += this.children[s.charAt(0) - 'a'].tUsedInWord(s.substring(1), this.children[s.charAt(0) - 'a'].timesUsed);
+        }
+        return count;
+    }
+    public int findFreq(int level, char x) {
+        int count = 0;
+        for (int i = 0; i < ALPHABET; i++) {
+            if (this.children[i] != null) {
+                count += this.children[i].findFreq(level, x);
+                if((char) (i + 'a') == x){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+        public String mostUsed(String output){
+            int[] most = new int[2];
+            most[0] = -1;
+            for(int i = 0; i < ALPHABET; i++){
+                if(this.children[i] != null){
+                    if(this.children[i].timesUsed > most[0]){
+                        most[0] = this.children[i].timesUsed;
+                        most[1] = i;
+                    }
+                }
+            }
+            if(most[0] >= 0){
+                output += (char)(most[1] + 'a');
+            }
+            if(this.children[most[1]] != null){
+                output = this.children[most[1]].mostUsed(output);
+            }
+            return output;
+        }
+
+            public void delete(String s) {
+                if (s.length() != 0) {
+                    if (this.children[s.charAt(0) - 'a'] != null) {
+                        this.children[s.charAt(0) - 'a'].delete(s.substring(1));
+                        this.children[s.charAt(0) - 'a'].word = false;
+                    }
+                }
+                //System.out.println("Deleted: " + s);
+                this.cleanup();
+            }

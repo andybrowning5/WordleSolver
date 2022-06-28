@@ -33,6 +33,16 @@ public class Trie {
         this.children[index].parent = this;
         this.children[index].add(s.substring(1));
     }
+    public void delete(String s) {
+        if (s.length() != 0) {
+            if (this.children[s.charAt(0) - 'a'] != null) {
+                this.children[s.charAt(0) - 'a'].delete(s.substring(1));
+                this.children[s.charAt(0) - 'a'].word = false;
+            }
+        }
+        //System.out.println("Deleted: " + s);
+        this.cleanup();
+    }
     public void cleanup() {
         for (int i = 0; i < ALPHABET; i++) {
             if (this.children[i] != null) {
@@ -116,7 +126,7 @@ public class Trie {
                 }
             }
         }
-        this.cleanup();
+        //this.cleanup();
     }
     public void eliminateGreen(String letters, int level) {
         for (int i = 0; i < ALPHABET; i++) {
@@ -133,7 +143,8 @@ public class Trie {
                 }
             }
         }
-        cleanup();
+
+        //cleanup();
     }
     public void eliminateYellow(String letters, int level) {
         for (int i = 0; i < ALPHABET; i++) {
@@ -213,8 +224,3 @@ public class Trie {
         return out.toString();
     }
 }
-
-
-
-
-

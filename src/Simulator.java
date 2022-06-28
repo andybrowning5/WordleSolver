@@ -10,7 +10,7 @@ public class Simulator {
     public String greyOutput(String guess, String word){
         StringBuilder out = new StringBuilder();
         boolean flag;
-        for(int i = 0; i < word.length(); i++){
+        for(int i = 0; i < guess.length(); i++){
             flag = false;
             for(int j = 0; j < word.length(); j++){
                 if(guess.charAt(i) == word.charAt(j)) {

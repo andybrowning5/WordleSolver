@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 public class Game {
-
-
     public static void main(String[] args) throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Would you like to play one game, or simulate multiple? (enter 1 for one game, 2 for multiple): ");
@@ -15,9 +13,11 @@ public class Game {
         if(a == 1){
             oneGame();
         }else if(a == 2){
+
             System.out.println("How many iterations would you like to run?: ");
             int iterations = sc.nextInt();
-            iterateSims(iterations);
+            iterateSimsRand(iterations);
+            //iterateSimsAllWords();
         }
     }
 
@@ -49,14 +49,13 @@ public class Game {
             prevGuess = guess;
         }
     }
-    public static void iterateSims(int iterations) throws FileNotFoundException {
+    public static void iterateSimsRand(int iterations) throws FileNotFoundException {
         NumberFormat formatter = new DecimalFormat("#0.000");
         final long startTime = System.currentTimeMillis();
         double totalTurns = 0.0;
         int[] dist = new int[7];
 
         for(int i = 0; i < iterations; i++) {
-            long startGameTime = System.nanoTime();
             System.out.println();
             System.out.println("NEW GAME: " + i);
             Trie dictionary = initializeTrie();
@@ -65,11 +64,6 @@ public class Game {
             int turns = newTurn(dictionary, 1, word, "", greenletters);
             dist[turns - 1]++;
             totalTurns += turns;
-            long averageTurns = (long) (totalTurns/(i + 1));
-            System.out.println("Average Turns: " + averageTurns);
-            double endGameTime = System.nanoTime();
-            System.out.println("This Game took: " + (endGameTime - startGameTime/1000000) + " seconds to execute");
-            System.out.println();
         }
 
         for(int i = 0; i < 7; i++){
@@ -88,7 +82,52 @@ public class Game {
 
         final long endTime = System.currentTimeMillis();
 
-        System.out.println("Finished in: " + ((endTime - startTime)/1000.0) + " Seconds");
+        System.out.println("Finished in: " + (int)((endTime - startTime)/1000.0/60) + ":"+ (int)((endTime - startTime)/1000.0)%60);
+    }
+    public static void iterateSimsAllWords() throws FileNotFoundException {
+        int iterations = 2309;
+        ArrayList<String> words = new ArrayList<>();
+        File file = new File("src/Dictionary.txt");
+        Scanner sc = new Scanner(file);
+
+        while (sc.hasNextLine()) {
+            words.add(sc.nextLine());
+        }
+
+
+        NumberFormat formatter = new DecimalFormat("#0.000");
+        final long startTime = System.currentTimeMillis();
+        double totalTurns = 0.0;
+        int[] dist = new int[7];
+
+        for(int i = 0; i < iterations; i++) {
+            System.out.println();
+            System.out.println("NEW GAME: " + i);
+            Trie dictionary = initializeTrie();
+            String word = words.get(i);
+            String greenletters = "";
+            int turns = newTurn(dictionary, 1, word, "", greenletters);
+            dist[turns - 1]++;
+            totalTurns += turns;
+        }
+
+        for(int i = 0; i < 7; i++){
+            if(i == 6){
+                System.out.println("distribution: Didnt finish: " + dist[i]);
+            }else{
+                System.out.println("distribution: " + (i + 1) + " turns occurred: " + dist[i]);
+            }
+        }
+
+        double averageTurns = totalTurns/iterations;
+        System.out.println("Average amount of turns over " + iterations + " iterations, using test for all ALG: " + averageTurns);
+
+
+        System.out.println("With a standard deviation of: " + formatter.format(findDeviation(averageTurns, dist, iterations)));
+
+        final long endTime = System.currentTimeMillis();
+
+        System.out.println("Finished in: " + (int)((endTime - startTime)/1000.0/60) + ":"+ (int)((endTime - startTime)/1000.0)%60);
     }
 
     private static Trie initializeTrie() throws FileNotFoundException {
@@ -105,25 +144,20 @@ public class Game {
     public static int newTurn(Trie dictionary, int turn, String word, String prevGuess, String greenletters) throws FileNotFoundException {
         System.out.println("_____________________");
         System.out.println("Turn: " + turn);
-        //System.out.println(dictionary.listify(dictionary));
-        //System.out.println(dictionary.wordsInTrie(0) + " words in trie");
-        //sets Algorithm
+        System.out.println(dictionary.listify(dictionary));
+        System.out.println(dictionary.wordsInTrie(0) + " words left");
+
         String guess;
-        guess = "";
 
         if(turn == 1){
             guess = "raise";
         }else {
             if (dictionary.wordsInTrie(0) > 1) {
+                dictionary.delete(prevGuess);
                 guess = testForAll(dictionary.listify(dictionary));
-                //guess = mostFreqLettersNoGreens(dictionary, prevGuess, greenletters);
+            }else{
+                guess = word;
             }
-        }
-        if(dictionary.wordsInTrie(0) <= 2){
-            guess = dictionary.randWord(0, prevGuess);
-        }
-        if(dictionary.wordsInTrie(0) <= 1){
-            guess = word;
         }
 
         Simulator sim = new Simulator();
@@ -149,11 +183,9 @@ public class Game {
         Random rand = new Random();
         File file = new File("src/Dictionary.txt");
         Scanner sc = new Scanner(file);
-
         while (sc.hasNextLine()) {
             words.add(sc.nextLine());
         }
-
         return words.get(rand.nextInt(words.size()));
     }
     public static double findDeviation(double average, int[] dist, int iterations){
@@ -181,7 +213,7 @@ public class Game {
         lowest[0] = 10000000;
 
         for(int i = 0; i < words.size(); i++){
-            for(int j = 0; j < dicList.size(); j++){
+            for(int j = dicList.size()-1; j > 0; j--){
                 Trie test = new Trie();
                 for (String s : dicList) {
                     test.add(s);

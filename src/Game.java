@@ -13,11 +13,16 @@ public class Game {
         if(a == 1){
             oneGame();
         }else if(a == 2){
+            System.out.println("Would you like to iterate through all words (press 1) or iterate a set number of random words (press 2)?");
+            a = sc.nextInt();
+            if(a == 1){
+                iterateSimsAllWords();
+            }else if(a == 2){
+                System.out.println("How many iterations would you like to run?: ");
+                int iterations = sc.nextInt();
+                iterateSimsRand(iterations);
 
-            System.out.println("How many iterations would you like to run?: ");
-            int iterations = sc.nextInt();
-            iterateSimsRand(iterations);
-            //iterateSimsAllWords();
+            }
         }
     }
 

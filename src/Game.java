@@ -92,7 +92,7 @@ public class Game {
     public static void iterateSimsAllWords() throws FileNotFoundException {
         int iterations = 2309;
         ArrayList<String> words = new ArrayList<>();
-        File file = new File("src/Dictionary.txt");
+        File file = new File("src/answerWords.txt");
         Scanner sc = new Scanner(file);
 
         while (sc.hasNextLine()) {
@@ -137,7 +137,7 @@ public class Game {
 
     private static Trie initializeTrie() throws FileNotFoundException {
         Trie dictionary = new Trie();
-        File file = new File("src/Dictionary.txt");
+        File file = new File("src/answerWords.txt");
         Scanner sc = new Scanner(file);
 
         while (sc.hasNextLine()) {
@@ -186,7 +186,7 @@ public class Game {
     public static String pickRandomWord() throws FileNotFoundException {
         ArrayList<String> words = new ArrayList<>();
         Random rand = new Random();
-        File file = new File("src/Dictionary.txt");
+        File file = new File("src/answerWords.txt");
         Scanner sc = new Scanner(file);
         while (sc.hasNextLine()) {
             words.add(sc.nextLine());

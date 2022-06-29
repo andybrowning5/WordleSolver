@@ -155,7 +155,7 @@ public class Game {
         String guess;
 
         if(turn == 1){
-            guess = "raise";
+            guess = "roate";
         }else {
             if (dictionary.wordsInTrie(0) > 1) {
                 dictionary.delete(prevGuess);
@@ -207,7 +207,7 @@ public class Game {
         ArrayList<Integer> wordCount = new ArrayList<>();
         ArrayList<String> tie = new ArrayList<>();
 
-        File file = new File("src/Dictionary.txt");
+        File file = new File("src/guessWords.txt");
         Scanner sc = new Scanner(file);
         int[] lowest = new int[2];
         while (sc.hasNextLine()) {
@@ -215,9 +215,10 @@ public class Game {
             wordCount.add(0);
         }
         Simulator sim = new Simulator();
-        lowest[0] = 10000000;
+        lowest[0] = Integer.MAX_VALUE;
 
         for(int i = 0; i < words.size(); i++){
+            //System.out.println(i + " " + words.get(i));
             for(int j = dicList.size()-1; j > 0; j--){
                 Trie test = new Trie();
                 for (String s : dicList) {

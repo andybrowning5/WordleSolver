@@ -117,28 +117,26 @@ public class Trie {
     //Wordle Eliminating Functions:
     public void eliminateGrey(String letters) {
         for (int i = 0; i < ALPHABET; i++) {
-            if (this.children[i] != null) {
-                this.children[i].eliminateGrey(letters);
                 for (int j = 0; j < letters.length(); j++) {
                     if (letters.charAt(j) >= 'a' && letters.charAt(j) <= 'z') {
                         this.children[letters.charAt(j) - 'a'] = null;
                     }
                 }
+            if (this.children[i] != null) {
+                this.children[i].eliminateGrey(letters);
             }
         }
         //this.cleanup();
     }
     public void eliminateGreen(String letters, int level) {
-        for (int i = 0; i < ALPHABET; i++) {
-            if (this.children[i] != null) {
-                this.children[i].eliminateGreen(letters, level + 1);
-            }
-        }
         for (int j = 0; j < letters.length(); j++) {
             if (letters.charAt(j) >= 'a' && letters.charAt(j) <= 'z') {
                 for (int k = 0; k < ALPHABET; k++) {
                     if (letters.charAt(j) - 'a' != k && level == j) {
                         this.children[k] = null;
+                    }
+                    if (this.children[k] != null) {
+                        this.children[k].eliminateGreen(letters, level + 1);
                     }
                 }
             }
